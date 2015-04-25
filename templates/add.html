@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset='utf-8'>
+  <title>Add Page</title>
+</head>
+<body>
+  <form action="/add" method="post">
+    <legend>Add Main Item</legend>
+    <input type="hidden" name="action" value="add_main">
+    <fieldset>
+      <legend>Item Name</legend>
+      <input type="text" name="main-name" required>
+    </fieldset>
+    <fieldset>
+      <legend>Email</legend>
+      <input type="email" name="email">
+    </fieldset>
+    <fieldset>
+      <legend>Phone Number</legend>
+      <input type="tel" name="phone">
+    </fieldset>
+    {% if checks|length > 0 %}
+    <fieldset>
+      <legend>Associated CheckBoxes</legend>
+      {% for c in checks %}
+      <label> {{ c.name }} </label><input type="checkbox" name="checks[]" value="{{ c.key }}">
+      {% endfor %}
+    </fieldset>
+    {% endif %}
+    {% if radios|length > 0 %}
+    <fieldset>
+      <legend>Associated RadioButtons</legend>
+      {% for r in radios %}
+      <label> {{ r.name }} </label><input type="radio" name="rdiobtn" value="{{ r.key }}">
+      {% endfor %}
+    </fieldset>
+    {% endif %}
+    <button type="submit">Add Main Item</button>
+  </form>
+  <br>
+  <form action="/add" method="post">
+    <legend>Add Checkbox</legend>
+    <input type="hidden" name="action" value="add_checkbox">
+    <fieldset>
+      <legend>Checkbox Name</legend>
+      <input type="text" name="checkbox-name" required>
+      <button type="submit">Add CheckBox</button>
+    </fieldset>
+  </form>
+  <br>
+  <form action="/add" method="post">
+    <legend>Add Radio Button</legend>
+    <input type="hidden" name="action" value="add_radiobutton">
+    <fieldset>
+      <legend>Radio Button Name</legend>
+      <input type="text" name="radiobutton-name" required>
+      <button type="submit">Add RadioButton</button>
+    </fieldset>
+  </form>
+  <br>
+  {% if message %}
+  <section>
+    <h2>Result</h2>
+    <p>{{ message }}
+  </section>
+  {% endif %}
+  {% if items|length > 0 %}
+  <section>
+    <h2>Edit Item</h2>
+    {% for i in items %}
+    <a href='/edit?key={{ i.key }}&dbkind=MainItem&action=edit'>{{ i.name }}</a>
+    {% endfor %}
+  </section>
+  {% endif %}
+  {% if checks|length > 0 %}
+  <section>
+    <h2>Edit CheckBox</h2>
+    {% for ch in checks %}
+    <a href='/edit?key={{ ch.key }}&dbkind=CheckBox&action=edit'>{{ ch.name }}</a>
+    {% endfor %}
+  </section>
+  {% endif %}
+  {% if radios|length > 0 %}
+  <section>
+    <h2>Edit RadioButton</h2>
+    {% for r in radios %}
+    <a href='/edit?key={{ r.key }}&dbkind=RadioButton&action=edit'>{{ r.name }}</a>
+    {% endfor %}
+  </section>
+  {% endif %}  
+</body>
+</html>

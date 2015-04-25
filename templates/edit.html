@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset='utf-8'>
+  <title>{% if action_page %}Edit {% else %}View {% endif %}{{ dbkind }}</title>
+</head>
+<body>
+
+  <form {% if action_page %} action="{{ action_page }}" method="post" {% endif %}>
+    <legend>{% if action_page %}Edit {% else %}View {% endif %}{{ dbkind }}</legend>    
+    <input type="hidden" name="key" value="{{ thing.key.urlsafe() }}">
+    <input type="hidden" name="dbkind" value="{{ dbkind }}">
+    {% if action_page %}
+    <input type="hidden" name="action" value="edit">
+    {% endif %}
+    <fieldset>
+      <legend>Item Name</legend>
+      <input type="text" name="item-name" required value="{{ thing.name }}">
+    </fieldset>
+    {% if dbkind == "MainItem" %}
+    <fieldset>
+      <legend>Email</legend>
+      <input type="email" name="email" value="{{ thing.email }}">
+    </fieldset>
+    <fieldset>
+      <legend>Phone Number</legend>
+      <input type="tel" name="phone" value="{{ thing.phone }}">
+    </fieldset>
+    {% if checks|length > 0 %}
+    <fieldset>
+      <legend>Associated CheckBoxes</legend>
+      {% for c in checks %}
+      <label> {{ c.name }} </label><input type="checkbox" name="checks[]" value="{{ c.key }}"
+      {% if c.checked %}checked="{{ c.checked }}" {% endif %}>
+      {% endfor %}
+    </fieldset>
+    {% endif %}
+    {% if radios|length > 0 %}
+    <fieldset>
+      <legend>Associated Radio Buttons</legend>
+      {% for r in radios %}
+      <label> {{ r.name }} </label><input type="radio" name="rdiobtn" value="{{ r.key }}"
+      {% if r.checked %}checked="{{ r.checked }}" {% endif %}>
+      {% endfor %}
+      <label>None</label><input type="radio" name="rdiobtn" value="">
+    </fieldset>
+    {% endif %}
+    {% endif %}
+    {% if action_page %}
+      <button type="submit">Update</button>    
+    {% endif %}
+  </form>
+  <form action="/add" method="get">
+    <button>Go Back to Add</button>
+  </form>    
+    {% if action_page and dbkind == "MainItem" %}
+    <form action="/edit?key={{ thing.key.urlsafe() }}&dbkind={{ dbkind }}&action=delete" method="post">
+      <button>Delete this {{ dbkind }}: {{ thing.name }}</button>
+    </form>
+    {% endif %}   
+  {% if message %}
+  <section>
+    <h3>Result</h3>
+    <p>{{ message }}
+  </section>
+  {% endif %}
+</body>
+</html>
